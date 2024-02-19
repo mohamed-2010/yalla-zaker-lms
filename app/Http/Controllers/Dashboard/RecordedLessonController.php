@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RecordedLessonController extends Controller
@@ -22,11 +23,7 @@ class RecordedLessonController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        // $role = Role::where('name', 'teacher')->get();
-        // $
-        // $role->givePermissionTo($permission);
-        // return dd($role);
+    {   
         if(Auth::user()->hasRole('admin')) {
             $lessons = RecordedLesson::get();
         } else {

@@ -31,9 +31,16 @@
                                 {{-- <a type="button" class="waves-effect waves-light btn btn-primary" href="{{route('dashboard.coupone_codes.edit', $couponeCode)}}">
                                     <i class="fa fa-edit"></i>
                                 </a> --}}
-                                <a type="button" class="waves-effect waves-light btn btn-danger-light" href="{{ auth()->user()->hasRole('admin') ? route('dashboard.coupone_codes.destroy', $couponeCode) : route('dashboard.teacher.coupone_codes.destroy', $couponeCode)}}">
+                                {{-- <a type="button" class="waves-effect waves-light btn btn-danger-light" >
                                     <i class="fa fa-trash"></i>
+                                </a> --}}
+                                <a onclick="event.preventDefault(); document.getElementById('delete_form_{{$key}}').submit();" href="{{ auth()->user()->hasRole('admin') ? route('dashboard.coupone_codes.destroy', $couponeCode) : route('dashboard.teacher.coupone_codes.destroy', $couponeCode)}}" class="waves-effect waves-light btn btn-danger-light" title="حذف">
+                                  <i class="fa fa-trash"></i>
                                 </a>
+                                <form id="delete_form_{{$key}}" method="{{ auth()->user()->hasRole('admin') ? route('dashboard.coupone_codes.destroy', $couponeCode) : route('dashboard.teacher.coupone_codes.destroy', $couponeCode)}}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    @csrf
+                                </form>
                             </td>
                         </tr>
                     @endforeach

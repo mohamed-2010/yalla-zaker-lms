@@ -21,17 +21,22 @@
                         <div class="row">
                             <div class="col-12">
 
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-form-label">المدرس <span class="text-danger">*</span></label>
-                                    <div class="controls">
-										<select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher" required>
-                                            <option value="">اختر مدرس</option>
-                                            @foreach ($teachers as $teacher)
-                                                <option value="{{ $teacher->id }}" @if ($RecordedLesson->teacher_id == $teacher->id) selected @endif>{{ $teacher->name }}</option>
-                                            @endforeach
-                                        </select>
-									</div>
-                                </div>
+                                @if(auth()->user()->hasRole('admin'))
+
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-form-label">المدرس <span class="text-danger">*</span></label>
+                                        <div class="controls">
+                                            <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher" required>
+                                                <option value="">اختر مدرس</option>
+                                                @foreach ($teachers as $teacher)
+                                                    <option value="{{ $teacher->id }}" @if ($RecordedLesson->teacher_id == $teacher->id) selected @endif>{{ $teacher->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @else
+                                    <input type="text" hidden value="{{auth()->user()->id}}" name="teacher_id">
+                                @endif
 
                                 <div class="form-group">
 									<label>الماده <span class="text-danger">*</span></label>

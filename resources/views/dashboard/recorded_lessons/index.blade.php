@@ -11,7 +11,7 @@
         <div class="d-flex align-items-center logo-box justify-content-between box-header with-border">
             <h4 class="box-title">الدروس المسجله</h4>
             @can('recorded-lesson-list')
-                <a href="{{ route('dashboard.grades.create') }}" class="waves-effect waves-light btn btn-primary mb-5">إضافه</a>
+                <a href="{{ auth()->user()->hasRole('admin') ? route('dashboard.recorded-lessons.create') : route('dashboard.teacher.recorded-lessons.create') }}" class="waves-effect waves-light btn btn-primary mb-5">إضافه</a>
             @endcan
         </div>
 
@@ -48,15 +48,15 @@
                             </td>
                             <td>
                                 @can('recorded-lesson-list')
-                                <a href="{{ route('dashboard.recorded-lessons.edit', $lesson->id) }}"  class="waves-effect waves-light btn btn-primary" title="تعديل">
+                                <a href="{{ auth()->user()->hasRole('admin') ? route('dashboard.recorded-lessons.edit', $lesson->id) : route('dashboard.teacher.recorded-lessons.edit', $lesson->id) }}"  class="waves-effect waves-light btn btn-primary" title="تعديل">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 @endcan
                                 @can('recorded-lesson-edit')
-                                    <a onclick="event.preventDefault(); document.getElementById('delete_form_{{$index}}').submit();" href="{{ route('dashboard.recorded-lessons.destroy', $lesson->id) }}" class="waves-effect waves-light btn btn-danger-light" title="حذف">
+                                    <a onclick="event.preventDefault(); document.getElementById('delete_form_{{$index}}').submit();" href="{{ auth()->user()->hasRole('admin') ? route('dashboard.recorded-lessons.destroy', $lesson->id) : route('dashboard.teacher.recorded-lessons.destroy', $lesson->id) }}" class="waves-effect waves-light btn btn-danger-light" title="حذف">
                                         <i class="fa fa-trash"></i>
                                     </a>
-                                    <form id="delete_form_{{$index}}" action="{{ route('dashboard.recorded-lessons.destroy', $lesson->id) }}" method="POST" style="display: none;">
+                                    <form id="delete_form_{{$index}}" action="{{ auth()->user()->hasRole('admin') ? route('dashboard.recorded-lessons.destroy', $lesson->id) : route('dashboard.teacher.recorded-lessons.destroy', $lesson->id) }}" method="POST" style="display: none;">
                                         @method('DELETE')
                                         @csrf
                                     </form>

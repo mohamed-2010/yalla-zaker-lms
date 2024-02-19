@@ -60,18 +60,22 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Teacher -->
-                                <div class="form-group">
-									<label>المدرس <span class="text-danger">*</span></label>
-									<div class="controls">
-										<select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
-                                            <option>اختر المدرس</option>
-                                            @foreach($teachers as $teacher)
-                                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                            @endforeach
-                                        </select>
-									</div>
-								</div>
+                                @if(auth()->user()->hasRole('admin'))
+                                    <!-- Teacher -->
+                                    <div class="form-group">
+                                        <label>المدرس <span class="text-danger">*</span></label>
+                                        <div class="controls">
+                                            <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
+                                                <option>اختر المدرس</option>
+                                                @foreach($teachers as $teacher)
+                                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @else
+                                    <input type="text" name="teacher_id" value="{{auth()->user()->id}}" hidden>
+                                @endif
 
                                 <div class="form-group m-form__group row">
                                     <label class="col-lg-2 col-form-label">الفيديوهات</label>
@@ -105,10 +109,14 @@ $(document).ready(function() {
     const couponeForm = $('#couponeForm');
     const videoCountError = $('#videoCountError');
 
-    stageSelect.change(function() {
-        const selectedStageId = $(this).val();
-        updateGradeOptions(selectedStageId);
-    });
+    @if(auth()->user()->hasRole('admin'))
+        stageSelect.change(function() {
+            const selectedStageId = $(this).val();
+            updateGradeOptions(selectedStageId);
+        });
+    @else
+        updateGradeOptions({{auth()->user()->id}});
+    @endif
 
     function updateGradeOptions(stageId) {
         videoSelect.empty(); // Clear existing options

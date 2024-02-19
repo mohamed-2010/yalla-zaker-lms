@@ -12,7 +12,7 @@
         <div class="box-body">
             <div class="row">
                 <div class="col">
-                    <form action="{{ auth()->user()->hasRole('admin') ? route('dashboard.books.update', $book->id) : route('dashoard.teacher.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ auth()->user()->hasRole('admin') ? route('dashboard.books.update', $book->id) : route('dashboard.teacher.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT') {{-- Method spoofing to make it a PUT request --}}
 
@@ -43,18 +43,21 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-									<label>المدرس <span class="text-danger">*</span></label>
-									<div class="controls">
-										<select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
-                                            <option>اختر المدرس</option>
-                                            @foreach($teachers as $teacher)
-                                                <option value="{{ $teacher->id }}" @if($book->teacher_id == $teacher->id) selected @endif>{{ $teacher->name }}</option>
-                                            @endforeach
-                                        </select>
-									</div>
-								</div>
-
+                                @if(auth()->user()->hasRole('admin'))
+                                    <div class="form-group">
+                                        <label>المدرس <span class="text-danger">*</span></label>
+                                        <div class="controls">
+                                            <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
+                                                <option>اختر المدرس</option>
+                                                @foreach($teachers as $teacher)
+                                                    <option value="{{ $teacher->id }}" @if($book->teacher_id == $teacher->id) selected @endif>{{ $teacher->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @else
+                                    <input type="text" value="{{ auth()->user()->id }}" name="teacher_id" hidden>
+                                @endif
                                 
                                 <div class="form-group">
 									<label>المرحله <span class="text-danger">*</span></label>
@@ -94,7 +97,6 @@
         const stageSelect = $('#teacher');
         const gradeSelect = $('#grade');
         const allTeachers = @json($teachers);
-        console.log(allTeachers);
 
         stageSelect.change(function() {
             const selectedStageId = $(this).val();

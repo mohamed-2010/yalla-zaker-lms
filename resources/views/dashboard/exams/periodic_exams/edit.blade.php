@@ -23,17 +23,25 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>المدرس <span class="text-danger">*</span></label>
-                        <div class="controls">
-                            <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
-                                <option>اختر المدرس</option>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}" @if ($exam->teacher_id == $teacher->id) selected @endif>{{ $teacher->name }}</option>
-                                @endforeach
-                            </select>
+                    @if(auth()->user()->hasRole('admin'))
+
+                        <div class="form-group">
+                            <label>المدرس <span class="text-danger">*</span></label>
+                            <div class="controls">
+                                <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
+                                    <option>اختر المدرس</option>
+                                    @foreach($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}" @if ($exam->teacher_id == $teacher->id) selected @endif>{{ $teacher->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    
+                    @else
+                        
+                        <input type="text" name="teacher_id" value="{{auth()->user()->id}}" hidden>
+
+                    @endif
 
                     
                     <div class="form-group">
@@ -57,7 +65,7 @@
                     </div>
                     
                     <div class="text-xs-left">
-                        <button type="submit" class="btn btn-info">إضافه</button>
+                        <button type="submit" class="btn btn-info">حفظ</button>
                     </div>
                 </form>
             </div>
@@ -74,10 +82,16 @@
         const subjectSelect = $('#subject');
         const allTeachers = @json($teachers);
 
-        teacherSelect.change(function() {
-            const selectedTeacherId = $(this).val();
-            updateTeacherOptions(selectedTeacherId);
-        });
+        @if(auth()->user()->hasRole('admin'))
+
+            teacherSelect.change(function() {
+                const selectedTeacherId = $(this).val();
+                updateTeacherOptions(selectedTeacherId);
+            });
+
+        @else
+            //updateTeacherOptions({{auth()->user()->id}});
+        @endif
 
         function updateTeacherOptions(teacherId) {
             subjectSelect.empty(); // Clear existing options

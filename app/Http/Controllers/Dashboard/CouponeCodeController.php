@@ -106,8 +106,11 @@ class CouponeCodeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CouponeCode $couponeCode)
+    public function destroy($couponeCode)
     {
-        //
+        return dd($couponeCode);
+        $couponCode = CouponeCode::find($couponeCode);
+        $couponCode->delete();
+        return redirect()->back()->with('success', "تم حذف الكود بنجاح");
     }
 }

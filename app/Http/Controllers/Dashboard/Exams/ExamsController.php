@@ -63,7 +63,7 @@ class ExamsController extends Controller
         $exam->teacher_id = $request->teacher_id;
         $exam->save();
         
-        return redirect()->route('dashboard.exams.index')->with('success', 'تم اضافة الامتحان بناجح');
+        return redirect()->route(auth()->user()->hasRole('admin') ? 'dashboard.exams.index' : 'dashboard.teacher.exams.index')->with('success', 'تم اضافة الامتحان بناجح');
     }
 
     /**

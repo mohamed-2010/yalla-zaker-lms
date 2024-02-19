@@ -19,7 +19,7 @@ class BookController extends Controller
         if(Auth::user()->hasRole('admin')) {
             $books = Book::all();
         }else{
-            $books = Book::where('teacher_id', Auth::user()->id);
+            $books = Book::where('teacher_id', Auth::user()->id)->get();
         }
 
         return view('dashboard.books.index', compact('books'));
@@ -62,7 +62,7 @@ class BookController extends Controller
 
         $book->save();
 
-        return redirect()->route('dashboard.books.index')->with('success', 'تم إضافة الكتاب بنجاح');
+        return redirect()->route(auth()->user()->hasRole('admin') ? 'dashboard.books.index' : 'dashboard.teacher.books.index')->with('success', 'تم إضافة الكتاب بنجاح');
     }
 
     /**
@@ -103,7 +103,7 @@ class BookController extends Controller
 
         $book->save();
 
-        return redirect()->route('dashboard.books.index')->with('success', 'تم تعديل الكتاب بنجاح');
+        return redirect()->route(auth()->user()->hasRole('admin') ? 'dashboard.books.index' : 'dashboard.teacher.books.index')->with('success', 'تم تعديل الكتاب بنجاح');
     }
 
     /**
@@ -115,6 +115,6 @@ class BookController extends Controller
         $book->clearMediaCollection('books');
         $book->delete();
 
-        return redirect()->route('dashboard.books.index')->with('success', 'تم حذف الكتاب بنجاح');
+        return redirect()->route(auth()->user()->hasRole('admin') ? 'dashboard.books.index' : 'dashboard.teacher.books.index')->with('success', 'تم حذف الكتاب بنجاح');
     }
 }

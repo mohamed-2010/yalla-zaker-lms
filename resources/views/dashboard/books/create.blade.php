@@ -41,18 +41,21 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-									<label>المدرس <span class="text-danger">*</span></label>
-									<div class="controls">
-										<select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
-                                            <option>اختر المدرس</option>
-                                            @foreach($teachers as $teacher)
-                                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                            @endforeach
-                                        </select>
-									</div>
-								</div>
-
+                                @if(auth()->user()->hasRole('admin'))
+                                    <div class="form-group">
+                                        <label>المدرس <span class="text-danger">*</span></label>
+                                        <div class="controls">
+                                            <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher">
+                                                <option>اختر المدرس</option>
+                                                @foreach($teachers as $teacher)
+                                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @else
+                                    <input type="text" name="teacher_id" hidden value="{{auth()->user()->id}}">
+                                @endif
                                 
                                 <div class="form-group">
 									<label>المرحله <span class="text-danger">*</span></label>
@@ -89,12 +92,15 @@
         const stageSelect = $('#teacher');
         const gradeSelect = $('#grade');
         const allTeachers = @json($teachers);
-        console.log(allTeachers);
 
-        stageSelect.change(function() {
-            const selectedStageId = $(this).val();
-            updateGradeOptions(selectedStageId);
-        });
+        @if(auth()->user()->hasRole('admin'))
+            stageSelect.change(function() {
+                const selectedStageId = $(this).val();
+                updateGradeOptions(selectedStageId);
+            });
+        @else
+            updateGradeOptions({{auth()->user()->id}});
+        @endif
 
         function updateGradeOptions(stageId) {
             gradeSelect.empty(); // Clear existing options
