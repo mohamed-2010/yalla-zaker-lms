@@ -4,3 +4,4 @@ sudo snap install svgo# yalla-zaker-lms
 # yalla-zaker-lms
 # yalla-zaker-lms
 # yalla-zaker-lms
+# yalla-zaker-lms
